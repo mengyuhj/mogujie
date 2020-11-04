@@ -3,11 +3,15 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view></feature-view>
-    <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" class="tab-control"></tab-control>
-    <goods-list :goods="showGoods"></goods-list>
+    <scroll class="content" ref="scroll">
+      <home-swiper :banners="banners"/>
+      <recommend-view :recommends="recommends"/>
+      <feature-view/>
+      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" class="tab-control"/>
+      <goods-list :goods="showGoods"/>
+    </scroll >
+    <!--    监听组件原生事件需给该组件添加native修饰符-->
+    <back-top @click.native="backClick"/>
   </div>
 </template>
 
@@ -19,12 +23,13 @@
 
   //公共组件导入
   import NavBar from "components/common/navbar/NavBar";
+  import Scroll from "components/common/scroll/Scroll";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
+  import BackTop from "components/content/backTop/BackTop";
 
   //数据请求
   import {getHomeMultidata, getHomeGoods} from "network/home";
-
 
   export default {
     name: "Home",
@@ -34,7 +39,9 @@
       FeatureView,
       NavBar,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -45,11 +52,11 @@
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
         },
-        currentType:'pop'
+        currentType: 'pop'
       }
     },
-    computed:{
-      showGoods(){
+    computed: {
+      showGoods() {
         return this.goods[this.currentType].list
       }
     },
@@ -62,39 +69,42 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
-    methods:{
+    methods: {
       /**
        * 网络数据请求
        */
-      getHomeMultidata(){
+      getHomeMultidata() {
         getHomeMultidata().then(res => {
           this.banners = res.data.data.banner.list;
           this.recommends = res.data.data.recommend.list;
         })
       },
-      getHomeGoods(type){
-        const page=this.goods[type].page+1
-        getHomeGoods(type,page).then(res=>{
+      getHomeGoods(type) {
+        const page = this.goods[type].page + 1
+        getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.data.list);
-          this.goods[type].page+=1;
+          this.goods[type].page += 1;
         })
       },
 
       /**
        * 事件监听
        */
-      tabClick(index){
+      tabClick(index) {
         switch (index) {
           case 0:
-            this.currentType='pop'
+            this.currentType = 'pop'
             break
           case 1:
-            this.currentType='new'
+            this.currentType = 'new'
             break
           case 2:
             this.currentType = 'sell'
             break
         }
+      },
+      backClick() {
+        this.$refs.scroll.scrollTo(0,0,800)
       }
     }
   }
@@ -102,7 +112,10 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
+    /*padding-top: 44px;*/
+    position: relative;
+    /*视口高度*/
+    height: 100vh;
   }
 
   .home-nav {
@@ -119,5 +132,15 @@
     position: sticky;
     top: 44px;
     z-index: 9;
+  }
+
+  .content {
+    overflow: hidden;
+    /*height: 200px;*/
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
 </style>

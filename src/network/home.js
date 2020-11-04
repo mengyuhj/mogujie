@@ -6,6 +6,7 @@ export function getHomeMultidata() {
   })
 }
 
+//商品数据请求
 export function getHomeGoods(type,page){
   return request({
     url:'/home/data',
