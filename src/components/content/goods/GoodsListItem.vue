@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+  <div class="goods-item" @click="itemClick">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -12,12 +12,34 @@
 <script>
   export default {
     name: "GoodsListItem",
-    props:{
-      goodsItem:{
-        type:Object,
-        default(){
+    props: {
+      goodsItem: {
+        type: Object,
+        default() {
           return {}
         }
+      }
+    },
+    computed: {
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
+    methods: {
+      imageLoad() {
+        //使用事件总线 类似于vuex
+        this.$bus.$emit('itemImageLoad')
+        // console.log('图片打印');
+      },
+      itemClick() {
+        this.$router.push('/detail/' + this.goodsItem.iid)
+        //query的方式传递id,取id时则从query中取
+        // this.$router.push({
+        //   path: '/detail',
+        //   query: {
+        //     id: this.goodsItem.iid
+        //   }
+        // })
       }
     }
   }

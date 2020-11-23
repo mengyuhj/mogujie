@@ -14,7 +14,7 @@ export function request(options) {
     //只有返回数据之后才会执行以后的步骤
     return config
   }, err => {
-    // console.log(err);
+    console.log(err);
   });
 
   // 通过实例发送网络请求
