@@ -58,7 +58,7 @@
       this._getCategory()
 
       // 2.监听图片加载完成
-	    this.$bus.$on('imgLoad', () => {
+	    this.$bus.$on('itemImageLoad', () => {
 		    this.$refs.scroll.refresh()
 	    })
     },
