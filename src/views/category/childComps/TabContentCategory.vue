@@ -23,7 +23,7 @@
       subcategories: {
         type: Object,
         default() {
-          return []
+          return {}
         }
       }
     }

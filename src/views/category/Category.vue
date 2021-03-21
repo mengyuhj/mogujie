@@ -65,11 +65,11 @@
     computed: {
 		  showSubcategory() {
 		    if (this.currentIndex === -1) return {}
-        return this.categoryData[this.currentIndex].subcategories
+        return this.categoryData[this.currentIndex].subcategories.data
       },
       showCategoryDetail() {
 		    if (this.currentIndex === -1) return []
-		    return this.categoryData[this.currentIndex].categoryDetail[this.currentType]
+		    return this.categoryData[this.currentIndex].categoryDetail[this.currentType].data
       }
     },
     methods: {
@@ -77,7 +77,7 @@
 		    getCategory().then(res => {
 		      // 1.获取分类数据
 		      this.categories = res.data.data.category.list
-			    console.log(res);
+			    // console.log(res);
 			    // 2.初始化每个类别的子数据
           for (let i = 0; i < this.categories.length; i++) {
             this.categoryData[i] = {
@@ -139,13 +139,16 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 44px;
-    bottom: 49px;
+    top: 45px;
+    bottom: 48px;
 
     display: flex;
+    overflow: hidden;
   }
 
   #tab-content {
+    position: relative;
+    background-color: #fff;
     height: 100%;
     flex: 1;
   }
